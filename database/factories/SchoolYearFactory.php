@@ -3,17 +3,18 @@
     namespace Database\Factories;
 
     use App\Models\School;
+    use App\Models\SchoolYear;
     use App\Models\User;
     use Illuminate\Database\Eloquent\Factories\Factory;
 
-    class SchoolFactory extends Factory
+    class SchoolYearFactory extends Factory
     {
         /**
          * The name of the factory's corresponding model.
          *
          * @var string
          */
-        protected $model = School::class;
+        protected $model = SchoolYear::class;
 
 
         /**
@@ -24,8 +25,9 @@
         public function definition()
         {
             return [
-                'user_id' => User::factory()->create()->id,
-                'name' => $this->faker->name()
+                'school_id' => School::factory()->create()->id,
+                'start' => $this->faker->date(),
+                'end' => $this->faker->date(),
             ];
         }
     }

@@ -15,6 +15,7 @@ class CreateDailyScheduleTable extends Migration
     {
         Schema::create('daily_schedule', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->date('date');
             $table->json('student_ids'); // make sure you cast the column as an array in the model.
             // protected $casts = ['student_ids' => 'array']

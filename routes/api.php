@@ -16,6 +16,8 @@
 
     Route::group(['middleware' => 'auth:sanctum', 'namespace' => 'Portal'], function (){
         Route::resource('/schools', 'SchoolsController');
+        Route::get('/school-years/{school_id}','SchoolYearsController@index');
+        Route::resource('/school-years', 'SchoolYearsController',["except"=>['index','show']]);
 
     });
 
