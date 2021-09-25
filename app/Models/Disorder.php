@@ -6,11 +6,11 @@
     use Illuminate\Database\Eloquent\Model;
     use Illuminate\Database\Eloquent\SoftDeletes;
 
-    class School extends Model
+    class Disorder extends Model
     {
         use HasFactory, SoftDeletes;
 
-        protected $table = 'schools';
+        protected $table = 'disorders';
 
         protected $fillable = [
             'user_id',
@@ -20,16 +20,13 @@
         public static function boot()
         {
             parent::boot();
-            static::creating(function ($school) {
-                $school->user_id = auth()->id();
+            static::creating(function ($disorder) {
+                $disorder->user_id = auth()->id();
             });
         }
 
-        public function user(){
-            return $this->belongsTo(User::class,'user_id');
-        }
-
-        public function schoolYears(){
-            return $this->hasMany(SchoolYear::class,'school_id');
+        public function user()
+        {
+            return $this->belongsTo(User::class, 'user_id');
         }
     }

@@ -22,7 +22,7 @@
         public function test_get_school_years_by_school()
         {
             $schoolYear = SchoolYear::factory()->create();
-            $schoolYears = $this->getJson('/api/school-years/'.$schoolYear->id);
+            $schoolYears = $this->getJson('/api/school-years/school/'.$schoolYear->id);
             $schoolYears->assertOk()->assertJsonCount(1);
         }
 
@@ -55,6 +55,6 @@
         public function test_delete_a_school(){
             $schoolYear = SchoolYear::factory()->create();
             $this->deleteJson('/api/school-years/'.$schoolYear->id)->assertOk();
-            $this->assertDatabaseMissing('school_years',['school_id'=> $schoolYear->id,'start'=> $schoolYear->start]);
+            $this->assertSoftDeleted('school_years',['school_id'=> $schoolYear->id,'start'=> $schoolYear->start]);
         }
     }

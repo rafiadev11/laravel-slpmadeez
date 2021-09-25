@@ -2,18 +2,18 @@
 
     namespace Database\Factories;
 
-    use App\Models\School;
+    use App\Models\Disorder;
     use App\Models\User;
     use Illuminate\Database\Eloquent\Factories\Factory;
 
-    class SchoolFactory extends Factory
+    class DisorderFactory extends Factory
     {
         /**
          * The name of the factory's corresponding model.
          *
          * @var string
          */
-        protected $model = School::class;
+        protected $model = Disorder::class;
 
 
         /**
@@ -25,7 +25,7 @@
         {
             return [
                 'user_id' => function () { return User::factory()->create()->id; },
-                'name' => $this->faker->name(),
+                'name' => $this->faker->word
             ];
         }
     }

@@ -18,7 +18,6 @@ class CreateStudentsTable extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->string('grade')->nullable();
-            $table->string('diagnostic')->nullable();
             $table->boolean('active');
             $table->timestamps();
             $table->softDeletes();

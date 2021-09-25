@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMinutesTable extends Migration
+class CreateGoalsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,12 @@ class CreateMinutesTable extends Migration
      */
     public function up()
     {
-        Schema::create('minutes', function (Blueprint $table) {
+        Schema::create('goals', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('school_year_id')->constrained('school_years')->onDelete('cascade');
             $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
-            $table->date('date');
-            $table->integer('minutes');
-            $table->string('attendance_status');
-            $table->text('notes')->nullable();
+            $table->foreignId('disorder_id')->constrained('disorders')->onDelete('cascade');
+            $table->integer('annual_minutes');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -32,6 +31,6 @@ class CreateMinutesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('minutes');
+        Schema::dropIfExists('school_year_student');
     }
 }

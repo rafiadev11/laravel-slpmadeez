@@ -26,17 +26,17 @@
             return $this->school->get();
         }
 
+        public function show(School $school): School
+        {
+            return $school;
+        }
+
         public function store(Request $request)
         {
             $this->validate($request, [
                 'name' => 'required',
             ]);
             return $this->school->create($request->all());
-        }
-
-        public function show(School $school): School
-        {
-            return $school;
         }
 
         public function update(School $school, Request $request)

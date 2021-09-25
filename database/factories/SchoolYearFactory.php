@@ -25,7 +25,7 @@
         public function definition()
         {
             return [
-                'school_id' => School::factory()->create()->id,
+                'school_id' => function(){return School::factory()->create()->id;},
                 'start' => $this->faker->date(),
                 'end' => $this->faker->date(),
             ];

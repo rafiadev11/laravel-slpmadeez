@@ -26,6 +26,10 @@
             return $this->schoolYear->where('school_id', $schoolId)->get();
         }
 
+        public function show(SchoolYear $schoolYear){
+            return $schoolYear;
+        }
+
         public function store(Request $request)
         {
             $this->validate($request, [

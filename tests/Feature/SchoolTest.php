@@ -18,7 +18,6 @@
             $this->actingAs($user);
         }
 
-
         public function test_get_all_schools()
         {
             School::factory()->count(2)->create();
@@ -63,6 +62,6 @@
         public function test_delete_a_school(){
             $school = School::factory()->create();
             $this->deleteJson('/api/schools/'.$school->id)->assertOk();
-            $this->assertDatabaseMissing('schools',['name'=> $school->name]);
+            $this->assertSoftDeleted('schools',['name'=> $school->name]);
         }
     }
