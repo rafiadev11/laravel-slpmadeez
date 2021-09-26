@@ -18,6 +18,7 @@
         Route::get('/school-years/school/{school_id}', 'SchoolYearsController@index');
         Route::resource('/school-years', 'SchoolYearsController', ["except" => ['index', 'show']]);
         Route::resource('/disorders', 'DisordersController');
+        Route::resource('/students','StudentsController');
 
     });
     Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

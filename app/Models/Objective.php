@@ -8,25 +8,20 @@
     use Illuminate\Database\Eloquent\Relations\HasMany;
     use Illuminate\Database\Eloquent\SoftDeletes;
 
-    class SchoolYear extends Model
+    class Objective extends Model
     {
         use HasFactory, SoftDeletes;
 
-        protected $table = 'school_years';
+        protected $table = 'objectives';
 
         protected $fillable = [
-            'school_id',
-            'start',
-            'end',
+            'goal_id',
+            'goal',
+            'notes',
         ];
 
-        public function goals(): HasMany
+        public function goal(): BelongsTo
         {
-            return $this->hasMany(Goal::class, 'school_year_id');
-        }
-
-        public function school(): BelongsTo
-        {
-            return $this->belongsTo(School::class, 'school_id');
+            return $this->belongsTo(Goal::class, 'goal_id');
         }
     }
