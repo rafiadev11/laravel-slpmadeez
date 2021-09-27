@@ -18,7 +18,10 @@
         Route::get('/school-years/school/{school_id}', 'SchoolYearsController@index');
         Route::resource('/school-years', 'SchoolYearsController', ["except" => ['index', 'show']]);
         Route::resource('/disorders', 'DisordersController');
-        Route::resource('/students','StudentsController');
+        Route::get('/students/{school_year_id}/{disorder_id?}', 'StudentsController@index');
+        Route::patch('/students/goal/{goal_id}', 'StudentsController@updateGoal');
+        Route::patch('/students/goal/{goal_id}/deactivate', 'StudentsController@deactivateGoal');
+        Route::resource('/students', 'StudentsController', ['except' => ['index']]);
 
     });
     Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

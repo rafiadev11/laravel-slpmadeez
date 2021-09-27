@@ -19,6 +19,7 @@
                 $table->text('goal');
                 $table->text('notes')->nullable();
                 $table->timestamps();
+                $table->softDeletes();
             });
         }
 

@@ -27,6 +27,11 @@
             return $this->hasMany(Objective::class, 'goal_id');
         }
 
+        public function schedule(): HasMany
+        {
+            return $this->hasMany(Schedule::class, 'goal_id');
+        }
+
         public function student(): BelongsTo
         {
             return $this->belongsTo(Student::class, 'student_id');
