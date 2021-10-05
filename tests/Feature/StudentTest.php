@@ -24,18 +24,18 @@
             $this->actingAs($user);
         }
 
-        public function test_get_students_by_school_year()
-        {
-            $student = $this->test_set_student_data();
-            $this->getJson('/api/students/'.$student['school_year_id'])
-                ->assertOk()
-                ->assertJsonCount(2);
-        }
+//        public function test_get_students_by_school_year()
+//        {
+//            $student = $this->test_set_student_data();
+//            $this->getJson('/api/students/'.$student['school_year_id'])
+//                ->assertOk()
+//                ->assertJsonCount(2);
+//        }
 
         public function test_get_students_by_school_year_and_disorder()
         {
             $student = $this->test_set_student_data();
-            $this->getJson('/api/students/'.$student['school_year_id'].'/'.$student['disorder_id'])
+            $st = $this->getJson('/api/students/'.$student['school_year_id'].'/'.$student['disorder_id'])
                 ->assertOk()
                 ->assertJsonCount(1);
         }
@@ -136,48 +136,49 @@
                 'disorders' => [
                     0 => [
                         'id' => $disorder[0]->id,
-                        'annual_minutes' => 500,
-                        'schedule' => [
-                            0 => [
-                                'day' => $schedule[0]->day,
-                                'start_time' => $schedule[0]->start_time,
-                                'end_time' => $schedule[0]->end_time,
-                            ],
-                            1 => [
-                                'day' => $schedule[1]->day,
-                                'start_time' => $schedule[1]->start_time,
-                                'end_time' => $schedule[1]->end_time,
-                            ],
-                        ],
-                        'objectives' => [
-                            $objective[0]->goal,
-                            $objective[1]->goal,
-                            $objective[2]->goal,
-                            $objective[3]->goal,
-                            $objective[4]->goal,
-                        ],
                     ],
                     1 => [
                         'id' => $disorder[1]->id,
-                        'annual_minutes' => 600,
+                    ],
+                ],
+                'sessions' => [
+                    0 => [
+                        'disorder_id' => $disorder[0]->id,
+                        'duration' => "5",
+                        'perMonth' => "6",
                         'schedule' => [
                             0 => [
-                                'day' => $schedule[0]->day,
-                                'start_time' => $schedule[0]->start_time,
-                                'end_time' => $schedule[0]->end_time,
+                                'day' => 'Monday',
+                                'checked' => false,
+                                'time' => [
+                                    'startTime' => null,
+                                    'endTime' => null,
+                                ],
                             ],
                             1 => [
-                                'day' => $schedule[1]->day,
-                                'start_time' => $schedule[1]->start_time,
-                                'end_time' => $schedule[1]->end_time,
+                                'day' => 'Tuesday',
+                                'checked' => true,
+                                'time' => [
+                                    'startTime' => "10:10",
+                                    'endTime' => "10:15",
+                                ],
                             ],
                         ],
-                        'objectives' => [
-                            $objective[0]->goal,
-                            $objective[1]->goal,
-                            $objective[2]->goal,
-                            $objective[3]->goal,
-                            $objective[4]->goal,
+                    ],
+                ],
+                'objectives' => [
+                    0 => [
+                        'disorder_id' => $disorder[0]->id,
+                        'values' => [
+                            0 => [
+                                'name' => 'test 1',
+                            ],
+                            1 => [
+                                'name' => 'test 2',
+                            ],
+                            2 => [
+                                'name' => 'test 3',
+                            ],
                         ],
                     ],
                 ],
