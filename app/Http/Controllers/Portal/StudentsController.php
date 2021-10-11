@@ -31,7 +31,7 @@
             return Goal::where('school_year_id', $schoolYearId)
                 ->when(!is_null($disorderId) && $disorderId != '0', function ($q) use ($disorderId) {
                     $q->where('disorder_id', $disorderId);
-                })->with('student','disorder')
+                })->with('student', 'disorder')
                 ->get();
         }
 
@@ -42,7 +42,6 @@
                 'first_name' => 'required',
                 'last_name' => 'required',
             ]);
-
             $student = $this->student->create([
                 'first_name' => $request->get('first_name'),
                 'last_name' => $request->get('last_name'),
@@ -56,13 +55,12 @@
                     'annual_minutes' => 0,
                     'active' => true,
                 ]);
-
                 foreach ($request->get('sessions') as $session) {
-                    if($session['disorder_id'] == $goal->disorder_id){
+                    if ($session['disorder_id'] == $goal->disorder_id) {
                         $annualMinutes = $session['duration'] * $session['perMonth'] * 8;
                         $goal->update(['annual_minutes' => $annualMinutes]);
-                        foreach ($session['schedule'] as $schedule){
-                            if($schedule['checked']){
+                        foreach ($session['schedule'] as $schedule) {
+                            if ($schedule['checked']) {
                                 Schedule::create([
                                     'goal_id' => $goal->id,
                                     'day' => $schedule['day'],
@@ -76,8 +74,8 @@
 
                 }
                 foreach ($request->get('objectives') as $objective) {
-                    if($objective['disorder_id'] == $goal->disorder_id){
-                        foreach ($objective['values'] as $value){
+                    if ($objective['disorder_id'] == $goal->disorder_id) {
+                        foreach ($objective['values'] as $value) {
                             Objective::create([
                                 'goal_id' => $goal->id,
                                 'goal' => $value['name'],
@@ -95,6 +93,7 @@
             $this->validate($request, [
                 'first_name' => 'required',
                 'last_name' => 'required',
+                'grade' => 'required',
             ]);
             $student->update($request->all());
             return $student->refresh();
@@ -135,23 +134,47 @@
                     ]);
                 }
             }
-
             return $goal->refresh();
         }
 
-        public function deactivateGoal($goalId, Request $request){
+        public function deactivateGoal($goalId, Request $request)
+        {
             $goal = Goal::where('student_id', $request->get('student_id'))
                 ->where('disorder_id', $request->get('disorder_id'))
                 ->where('school_year_id', $request->get('school_year_id'))
                 ->findOrFail($request->get('goal_id'));
             $goal->update([
-                'active' => false
+                'active' => false,
             ]);
             return $goal->refresh();
         }
-//
-//        public function destroy(SchoolYear $schoolYear): bool
-//        {
-//            return $schoolYear->delete();
-//        }
+
+        public function addDisorder(Request $request)
+        {
+            $goal = Goal::create([
+                'school_year_id' => $request->get('school_year_id'),
+                'student_id' => $request->get('student_id'),
+                'disorder_id' => $request->get('id'),
+                'annual_minutes' => $request->get('duration') * $request->get('perMonth') * 8,
+                'active' => true,
+            ]);
+            foreach ($request->get('schedule') as $schedule) {
+                if ($schedule['checked']) {
+                    Schedule::create([
+                        'goal_id' => $goal->id,
+                        'day' => $schedule['day'],
+                        'start_time' => $schedule['time']['startTime'],
+                        'end_time' => $schedule['time']['endTime'],
+                    ]);
+                }
+            }
+            foreach ($request->get('objectives') as $objective) {
+                Objective::create([
+                    'goal_id' => $goal->id,
+                    'goal' => $objective['name'],
+                ]);
+            }
+
+            return Goal::with('student','disorder')->findOrFail($goal->id);
+        }
     }

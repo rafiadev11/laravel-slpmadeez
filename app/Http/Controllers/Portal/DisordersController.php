@@ -4,7 +4,7 @@
 
     use App\Http\Controllers\Controller;
     use App\Models\Disorder;
-    use App\Models\School;
+    use App\Models\Goal;
     use Illuminate\Http\Request;
 
     class DisordersController extends Controller
@@ -52,5 +52,16 @@
         public function destroy(Disorder $disorder): bool
         {
             return $disorder->delete();
+        }
+
+        public function unused($studentId){
+            $goals = Goal::where('student_id', $studentId)->get();
+            $disorderIds = [];
+            foreach ($goals as $goal){
+                $disorderIds[] = $goal->disorder_id;
+            }
+            return $this->disorder
+                ->whereNotIn('id',$disorderIds)
+                ->get();
         }
     }
