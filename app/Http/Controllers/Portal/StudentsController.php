@@ -174,7 +174,36 @@
                     'goal' => $objective['name'],
                 ]);
             }
+            return Goal::with('student', 'disorder')->findOrFail($goal->id);
+        }
 
-            return Goal::with('student','disorder')->findOrFail($goal->id);
+        public function getSchedule($goalId)
+        {
+            return Schedule::where('goal_id', $goalId)->get();
+        }
+
+        public function updateSchedule(Request $request)
+        {
+            $goalId = $request->get('goal_id');
+            foreach ($request->get('schedule') as $schedule) {
+                if ($schedule['checked']) {
+                    if (Arr::has($schedule, 'id') && !is_null($schedule['id'])) {
+                        Schedule::findOrFail($schedule['id'])
+                            ->update([
+                                'day' => $schedule['day'],
+                                'start_time' => $schedule['time']['startTime'],
+                                'end_time' => $schedule['time']['endTime'],
+                            ]);
+                    } else {
+                        Schedule::create([
+                            'goal_id' => $goalId,
+                            'day' => $schedule['day'],
+                            'start_time' => $schedule['time']['startTime'],
+                            'end_time' => $schedule['time']['endTime'],
+                        ]);
+                    }
+
+                }
+            }
         }
     }

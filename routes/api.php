@@ -24,6 +24,8 @@
         Route::patch('/students/goal/{goal_id}/deactivate', 'StudentsController@deactivateGoal');
         Route::resource('/students', 'StudentsController', ['except' => ['index']]);
         Route::post('/student/disorder', 'StudentsController@addDisorder');
+        Route::get('/student/schedule/{goal_id}', 'StudentsController@getSchedule');
+        Route::post('/student/update-schedule', 'StudentsController@updateSchedule');
 
     });
     Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
