@@ -202,8 +202,46 @@
                             'end_time' => $schedule['time']['endTime'],
                         ]);
                     }
-
+                } else {
+                    if (Arr::has($schedule, 'id') && !is_null($schedule['id'])) {
+                        Schedule::findOrFail($schedule['id'])->delete();
+                    }
                 }
             }
+        }
+
+        public function getObjectives($goalId)
+        {
+            return Objective::where('goal_id', $goalId)->get();
+        }
+
+        public function updateObjectives(Request $request)
+        {
+            $goalId = $request->get('goal_id');
+            $ids = [];
+            foreach ($request->get('objectives') as $objective) {
+                if (Arr::has($objective, 'id') && !is_null($objective['id'])) {
+                    Objective::findOrFail($objective['id'])
+                        ->update([
+                            'goal' => $objective['name'],
+                        ]);
+                    $ids[] = $objective['id'];
+                } else {
+                    $obj = Objective::create([
+                        'goal_id' => $goalId,
+                        'goal' => $objective['name'],
+                    ]);
+                    $ids[] = $obj->id;
+                }
+            }
+            Objective::where('goal_id', $goalId)
+                ->whereNotIn('id', $ids)
+                ->delete();
+        }
+
+        public function deactivate(Request $request)
+        {
+            Goal::findOrFail($request->get('id'))
+                ->update(['active' => false]);
         }
     }

@@ -26,7 +26,9 @@
         Route::post('/student/disorder', 'StudentsController@addDisorder');
         Route::get('/student/schedule/{goal_id}', 'StudentsController@getSchedule');
         Route::post('/student/update-schedule', 'StudentsController@updateSchedule');
-
+        Route::get('/student/objectives/{goal_id}', 'StudentsController@getObjectives');
+        Route::post('/student/update-objectives', 'StudentsController@updateObjectives');
+        Route::post('/student/deactivate', 'StudentsController@deactivate');
     });
     Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
         return $request->user();
