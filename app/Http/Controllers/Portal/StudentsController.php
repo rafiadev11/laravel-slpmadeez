@@ -9,7 +9,6 @@
     use App\Models\Student;
     use Illuminate\Http\Request;
     use Illuminate\Support\Arr;
-    use Illuminate\Support\Facades\Log;
 
     class StudentsController extends Controller
     {
@@ -31,7 +30,9 @@
             return Goal::where('school_year_id', $schoolYearId)
                 ->when(!is_null($disorderId) && $disorderId != '0', function ($q) use ($disorderId) {
                     $q->where('disorder_id', $disorderId);
-                })->with('student', 'disorder')
+                })->with(['student', 'disorder', 'schoolYear' => function($q){
+                    $q->with('school');
+                }])
                 ->get();
         }
 
