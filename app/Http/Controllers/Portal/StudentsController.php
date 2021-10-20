@@ -30,9 +30,11 @@
             return Goal::where('school_year_id', $schoolYearId)
                 ->when(!is_null($disorderId) && $disorderId != '0', function ($q) use ($disorderId) {
                     $q->where('disorder_id', $disorderId);
-                })->with(['student', 'disorder', 'schoolYear' => function($q){
-                    $q->with('school');
-                }])
+                })->with([
+                    'student', 'disorder', 'schoolYear' => function ($q) {
+                        $q->with('school');
+                    },
+                ])
                 ->get();
         }
 
@@ -244,5 +246,46 @@
         {
             Goal::findOrFail($request->get('id'))
                 ->update(['active' => false]);
+        }
+
+        public function transfer(Request $request)
+        {
+            $this->validate($request, [
+                'newSchoolYearId' => 'required|integer',
+                'goalId' => 'required|integer',
+                'withObjectives' => 'required|boolean',
+            ]);
+
+            $goal = Goal::findOrFail($request->get('goalId'));
+
+
+            if(Goal::where('school_year_id',$request->get('newSchoolYearId'))->where('student_id',$goal->student_id)
+                ->count() > 0){
+                return response()->json([
+                    'errors' =>
+                        [
+                            "duplicate" => ["The school year selected is already assigned to the selected student."],
+                        ],
+                ], 422);
+            }
+            $newGoal = Goal::create([
+                'school_year_id' => $request->get('newSchoolYearId'),
+                'student_id' => $goal->student_id,
+                'disorder_id' => $goal->disorder_id,
+                'annual_minutes' => $goal->annual_minutes,
+                'active' => 1,
+            ]);
+
+            if ($request->get('withObjectives')) {
+                $objectives = Objective::where('goal_id', $goal->id)->get();
+                foreach ($objectives as $objective) {
+                    Objective::create([
+                        'goal_id' => $newGoal->id,
+                        'goal' => $objective->goal,
+                        'notes' => $objective->notes,
+                    ]);
+                }
+            }
+            return Goal::with('schedule', 'objectives', 'student', 'schoolYear', 'disorder')->findOrFail($newGoal->id);
         }
     }
