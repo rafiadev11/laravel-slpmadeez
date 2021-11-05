@@ -23,7 +23,7 @@
 
         public function index()
         {
-            return $this->school->get();
+            return $this->school->with('schoolYears')->get();
         }
 
         public function show(School $school): School
